@@ -2,6 +2,7 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import { lerEmails } from './gmail'
 
 function createWindow(): void {
   // Create the browser window.
@@ -34,6 +35,24 @@ function createWindow(): void {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
 }
+
+ipcMain.handle('ler-emails', async () => {
+  try {
+    return await lerEmails();
+  } catch {
+    return [];
+  }
+});
+
+ipcMain.handle('open-external', async (event, url) => {
+  try {
+    await shell.openExternal(url);
+    return true; // Indica sucesso
+  } catch (error) {
+    console.error('Erro ao abrir URL externa:', url, error);
+    return false; // Indica falha
+  }
+});
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

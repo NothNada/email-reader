@@ -8,7 +8,10 @@ export default defineConfig({
     plugins: [externalizeDepsPlugin()]
   },
   preload: {
-    plugins: [externalizeDepsPlugin()]
+    plugins: [externalizeDepsPlugin()],
+    build: {
+      rollupOptions: { output: { inlineDynamicImports: true } }
+    }
   },
   renderer: {
     resolve: {
